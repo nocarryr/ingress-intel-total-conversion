@@ -1,4 +1,4 @@
-build
+build/
 localbuildsettings.py
 localbuildsettings.json
 *.pyc
