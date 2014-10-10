@@ -65,6 +65,7 @@ def deploy_s3cmd(bucket, cfg=None):
 
 def deploy_boto(bucket, credentials_file=None, do_uploads=True):
     if credentials_file is not None:
+        credentials_file = os.path.expanduser(credentials_file)
         confparse = ConfigParser.RawConfigParser()
         confparse.read(credentials_file)
         key_id = confparse.get('Credentials', 'aws_access_key_id')
@@ -102,22 +103,29 @@ def deploy_boto(bucket, credentials_file=None, do_uploads=True):
     return root_node, index_files
                 
 
-def build_localsettings(base_url):
-    local_url = '%s/local' % (base_url)
-    mobile_url = '%s/mobile' % (base_url)
-    d = {
-        'local':{
-            'resourceUrlBase': local_url,
-            'distUrlBase': local_url,
-        },
-        'mobile':{
-            'resourceUrlBase': mobile_url,
-            'distUrlBase': mobile_url,
-        },
-    }
-    s = json.dumps(d, indent=2)
-    with open('localbuildsettings.json', 'w') as f:
-        f.write(s)
+def build_localsettings(base_url, builds):
+    filename = 'localbuildsettings.json'
+    urls = dict(zip(builds, ['/'.join([base_url, build]) for build in builds]))
+    if os.path.exists(filename):
+        with open(filename, 'r') as f:
+            s = f.read()
+        d = json.loads(s)
+    else:
+        d = {}
+    need_save = False
+    for build in builds:
+        if build not in d:
+            d[build] = {}
+            need_save = True
+        for key in ['resourceUrlBase', 'distUrlBase']:
+            if key in d[build]:
+                continue
+            d[build][key] = urls[build]
+            need_save = True
+    if need_save:
+        s = json.dumps(d, indent=2)
+        with open(filename, 'w') as f:
+            f.write(s)
         
         
 
@@ -132,14 +140,17 @@ def main():
     p.add_argument('--build-url', dest='build_url', help='(optional) will be generated given the s3 bucket')
     args, remaining = p.parse_known_args()
     o = vars(args)
+    for key, val in o.iteritems():
+        if not val and key in buildSettings:
+            o[key] = buildSettings[key]
     if not o['no_builds']:
         if not o['build_url']:
             o['build_url'] = 'http://s3.amazonaws.com/%s' % (o['s3_bucket'])
-        build_localsettings(o['build_url'])
         if not o['builds']:
             o['builds'] = [defaultBuild]
         if 'all' in o['builds']:
             o['builds'] = buildSettings.keys()[:]
+        build_localsettings(o['build_url'], o['builds'])
         print 'builds: %s' % (o['builds'])
         for name in o['builds']:
             do_build(name)
