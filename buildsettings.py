@@ -9,6 +9,8 @@
 # preBuild - optional - an array of strings to run as commands, via os.system, before building the scripts
 # postBuild - optional - an array of string to run as commands, via os.system, after all builds are complete
 
+import os
+import json
 
 buildSettings = {
     # local: use this build if you're not modifying external resources
@@ -47,6 +49,15 @@ buildSettings = {
 
 }
 
+if os.path.exists('localbuildsettings.json'):
+    with open('localbuildsettings.json', 'r') as f:
+        s = f.read()
+    d = json.loads(s)
+    for key, val in d.iteritems():
+        if key not in buildSettings:
+            buildSettings[key] = val
+        else:
+            buildSettings[key].update(val)
 
 
 # defaultBuild - the name of the default build to use if none is specified on the build.py command line
