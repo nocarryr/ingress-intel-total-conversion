@@ -13,29 +13,23 @@ offers many more features. It is available for
 
 <h3>Latest news</h3>
 
-<h4>6th October 2014</h4>
+<h4>12th September 2015</h4>
 <p>
-IITC 0.18.1 and IITC Mobile 0.11.7 have just been released. Changes include
+IITC 0.25.0 has been released. This is a critical update to fix things after a Niantic site update.
+</p>
+<p>
+Other changes include
 </p>
 <ul>
-<li>Added support for 'ornaments' - per-portal markers sent from the server, currently used for anomaly portals.</li>
-<li>Player tracker plugin - fix player tracker when faction COMM is viewed.</li>
-<li>Passcodes - fix displaying results from passcode redemption.</li>
-<li>Other minor tweaks and bugfixes.</li>
+<li>"Placeholder portals". Like stock intel, IITC creates clickable portals at the end of links. Portal highlighters
+won't work on these as they don't contain enough information</li>
+<li>Artifacts loading fixed after a change in data format by Niantic</li>
+<li>'show-more-portals' plugin is no longer required - Niantic now return all portals at zoom 15, rather than zoom 17</li>
+<li>New plugin: "cache-details-on-map". Caches the portal details as you select portals, and keeps these portals on the map
+even when you zoom out</li>
+<li>and other tweaks/bugfixes</li>
 </ul>
-
-<h4>17th September 2014</h4>
-<p>
-IITC 0.18.0 and IITC Mobile 0.11.6 have just been released. This is an important update required to fix a few
-problems caused in recent Niantic site updates.
-</p>
-<p>Changes include:</p>
-<ul>
-<li>New plugin: layer count. Counts the number of overlapping layers on the map at the selected point</li>
-<li>Portals list plugin: A major update, including integration with the bookmarks and uniques plugins</li>
-<li>COMM bugfixes: only load the visible tab (in preperation for adding the 'alerts' tab), and fix COMM not loading on global map view</li>
-<li>plus other tweaks and bugfixes...</li>
-</ul>
-
+<b>Update 17th September 2015</b>
+<p>IITC 0.25.1 released. This fixes search not working after MapQuest made a change to their API.</p>
 
 <a class="btn btn-default btn-sm" href="?page=news">Older news</a>
